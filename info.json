@@ -1,0 +1,11 @@
+{
+    "name": "MainBusIndicator",
+    "version": "0.1.0",
+    "title": "Main bus indicator",
+    "author": "Aing",
+    "contact": "",
+    "homepage": "",
+    "factorio_version": "0.17",
+    "dependencies": ["base >= 0.17"],
+    "description": "This mod adds an object to mark a main bus location by drawing a line."
+}
