@@ -1,3 +1,6 @@
+require('__stdlib__/stdlib/utils/defines/color')
+local Color = require('stdlib/color/color')
+
 local items = {}
 
 script.on_event(
@@ -6,7 +9,7 @@ script.on_event(
         if e.tick % 60 == 0 then
             for _, v in pairs(game.surfaces["nauvis"].find_entities_filtered{name = "mainbus-indicator"}) do
                 rendering.draw_line{
-                    color = {r = 1, g = 1, b = 0, a = 0.5},
+                    color = Color.set(defines.color.yellow, 0.5),
                     width = 12,
                     gap_length = 1,
                     dash_length = 2,
@@ -31,7 +34,6 @@ script.on_event(
     {defines.events.on_built_entity},
     function(e)
         if e.created_entity.name == 'mainbus-indicator' then
-            table.insert(items, e.created_entity)
             local first_player = game.players[1]
             first_player.print('Entity: ' .. e.created_entity.name)
             first_player.print('Direction: ' .. e.created_entity.direction)
@@ -50,9 +52,5 @@ function calculateEndLinePosition(position, direction)
         return {position.x - distance, position.y}
     elseif direction == defines.direction.south then
         return {position.x, position.y - distance}
-        -- elseif direction == defines.direction.northwest then return position + {-0.71*distance, distance}
-        -- elseif direction == defines.direction.southwest then return position + {-0.71*distance, -0.71*distance}
-        -- elseif direction == defines.direction.northeast then return position + {0.71*distance, 0.71*distance}
-        -- elseif direction == defines.direction.southeast then return position + {0.71*distance, -0.71*distance}
     end
 end
