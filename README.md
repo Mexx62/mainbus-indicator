@@ -5,7 +5,7 @@ Mainbus-Indicator is a factorio mod that indicates where the mainbus lanes are g
 ## ToDo
 
 * Show sprite every x tile
-* Change how the items are retrieved (right now, we retrieve the on_built_entities, so if you load a game, the functionality doesn't work)
+* Change how the line is redrawn after rotating the entity
 * Add settings for: 
   * Line's length
   * Gaps and dashes' length
