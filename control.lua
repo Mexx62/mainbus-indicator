@@ -23,7 +23,7 @@ end
 
 function addSpritesOnLine(entity)
     if (entityHasSignal(entity)) then
-        for i = 4, 100, 3 do
+        for i = 1, 100, 3 do
             rendering.draw_sprite{
                 sprite = convertSignalToSpritePath(entity.get_control_behavior().get_signal(1)),
                 orientation = entity.direction,
@@ -59,7 +59,7 @@ script.on_init(drawLinesOnAllIndicators)
 script.on_event(
     {defines.events.on_built_entity},
     function(e)
-        if e.entity.name == "mainbus-indicator" then
+        if e.created_entity.name == "mainbus-indicator" then
             drawLineOnIndicator(e.entity)
             addSpritesOnLine(e.entity)
         end
@@ -75,3 +75,4 @@ script.on_event(
         end
     end
 )
+
