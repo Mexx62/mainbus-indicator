@@ -22,17 +22,22 @@ function drawLineOnIndicator(entity)
 end
 
 function addSpritesOnLine(entity)
-    for i = 10, 100, 8 do
-        rendering.draw_sprite{
-            -- sprite = convertSignalToSpritePath(entity.get_control_behavior().get_signal(1)),
-            sprite = "item/iron-chest",
-            orientation = entity.direction,
-            target = calculateShiftedPosition(entity.position, entity.direction, i),
-            surface = "nauvis",
-            x_scale = 0.85,
-            y_scale = 0.85
-        }
+    if (entityHasSignal(entity)) then
+        for i = 4, 100, 3 do
+            rendering.draw_sprite{
+                sprite = convertSignalToSpritePath(entity.get_control_behavior().get_signal(1)),
+                orientation = entity.direction,
+                target = calculateShiftedPosition(entity.position, entity.direction, i),
+                surface = "nauvis",
+                x_scale = 0.85,
+                y_scale = 0.85
+            }
+        end
     end
+end
+
+function entityHasSignal(entity)
+    return entity.get_control_behavior().get_signal(1)['signal'] ~= nil
 end
 
 function convertSignalToSpritePath(signal) return signal.signal.type .. "/" .. signal.signal.name end
@@ -70,4 +75,3 @@ script.on_event(
         end
     end
 )
-
