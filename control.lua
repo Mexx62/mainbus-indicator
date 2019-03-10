@@ -1,49 +1,43 @@
 require('__stdlib__/stdlib/utils/defines/color')
-local Color = require('stdlib/color/color')
+local Color = require('__stdlib__/stdlib/utils/color')
 
-local items = {}
-
-script.on_event(
-    {defines.events.on_tick},
-    function(e)
-        if e.tick % 60 == 0 then
-            for _, v in pairs(game.surfaces["nauvis"].find_entities_filtered{name = "mainbus-indicator"}) do
-                rendering.draw_line{
-                    color = Color.set(defines.color.yellow, 0.5),
-                    width = 12,
-                    gap_length = 1,
-                    dash_length = 2,
-                    from = v,
-                    to = calculateEndLinePosition(v.position, v.direction),
-                    surface = "nauvis",
-                    draw_on_ground = true
-                }
-            end
-        end
+function drawLinesOnAllIndicators()
+    for _, v in pairs(game.surfaces["nauvis"].find_entities_filtered{name = "mainbus-indicator"}) do
+        drawLineOnIndicator(v)
+        addSpritesOnLine(v)
     end
-)
+end
 
-script.on_event(
-    {defines.events.on_player_rotated_entity},
-    function(e)
-        if e.entity.name == "mainbus-indicator" then rendering.clear() end
+function drawLineOnIndicator(entity)
+    rendering.draw_line{
+        color = Color.set(defines.color.yellow, 0.5),
+        width = 12,
+        gap_length = 1,
+        dash_length = 2,
+        from = entity,
+        to = calculateShiftedPosition(entity.position, entity.direction, 100),
+        surface = "nauvis",
+        draw_on_ground = true
+    }
+end
+
+function addSpritesOnLine(entity)
+    for i = 10, 100, 8 do
+        rendering.draw_sprite{
+            -- sprite = convertSignalToSpritePath(entity.get_control_behavior().get_signal(1)),
+            sprite = "item/iron-chest",
+            orientation = entity.direction,
+            target = calculateShiftedPosition(entity.position, entity.direction, i),
+            surface = "nauvis",
+            x_scale = 0.85,
+            y_scale = 0.85
+        }
     end
-)
+end
 
-script.on_event(
-    {defines.events.on_built_entity},
-    function(e)
-        if e.created_entity.name == 'mainbus-indicator' then
-            local first_player = game.players[1]
-            first_player.print('Entity: ' .. e.created_entity.name)
-            first_player.print('Direction: ' .. e.created_entity.direction)
-            first_player.print('Position: ' .. serpent.block(e.created_entity.position))
-        end
-    end
-)
+function convertSignalToSpritePath(signal) return signal.signal.type .. "/" .. signal.signal.name end
 
-function calculateEndLinePosition(position, direction)
-    local distance = 100
+function calculateShiftedPosition(position, direction, distance)
     if direction == defines.direction.east then
         return {position.x + distance, position.y}
     elseif direction == defines.direction.north then
@@ -54,3 +48,26 @@ function calculateEndLinePosition(position, direction)
         return {position.x, position.y - distance}
     end
 end
+
+script.on_init(drawLinesOnAllIndicators)
+
+script.on_event(
+    {defines.events.on_built_entity},
+    function(e)
+        if e.entity.name == "mainbus-indicator" then
+            drawLineOnIndicator(e.entity)
+            addSpritesOnLine(e.entity)
+        end
+    end
+)
+
+script.on_event(
+    {defines.events.on_player_rotated_entity},
+    function(e)
+        if e.entity.name == "mainbus-indicator" then
+            rendering.clear()
+            drawLinesOnAllIndicators()
+        end
+    end
+)
+
