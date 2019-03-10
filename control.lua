@@ -60,8 +60,8 @@ script.on_event(
     {defines.events.on_built_entity},
     function(e)
         if e.created_entity.name == "mainbus-indicator" then
-            drawLineOnIndicator(e.entity)
-            addSpritesOnLine(e.entity)
+            drawLineOnIndicator(e.created_entity)
+            addSpritesOnLine(e.created_entity)
         end
     end
 )
